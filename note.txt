@@ -1,0 +1,975 @@
+Con trỏ, cấp phát động: heap -> phải tự cấp phát và delete
+biến tĩnh: stack -> sẽ bị del khi tràn
+
+===========================================
+const ở cuối function: đây là 1 hàm const function, hàm này sẽ ko thể thay đổi giá trị của các variables của class,
+trừ khi variables được khai báo là có thể thay đổi được.
+
+const ở đầu function: hàm này sẽ trả về 1 variables const, tức là kết quả trả về của hàm này sẽ ko thể bị thay
+đổi. ví dụ: const int a = m.showName("id"); a = 10; => complile error
+
+========================================
+DBUS: https://techbase.kde.org/Development/Tutorials/D-Bus/Introduction
+
+* Buses: Buses được sử dụng khi có nhiều giao tiếp được sử dụng. Để như thế, 1 server trung tâm được launched trước khi ứng dụng có thể kết nối đến bus. Server này có nhiệm vụ theo dõi ứng dụng coonnect đến nó và
+điều chuyển tin nhắn giữa nguồn và đích.
+Có 2 loại bus: system bus và session bus: For example, an application wishing to query the list of hardware devices attached to the computer will probably communicate to a service available on the system bus, 
+while the service providing opening of the user's web browser will be probably found on the session bus.
+On the system bus, one can also expect to find restrictions on what services each application is allowed to offer. Therefore, one can be reasonably certain that, if a certain service is present, it is being offered by a 
+trusted application.
+
+
+Buses như là chuyến xe bus chạy trên 1 tuyến đường. Khi đó các ứng dụng sẽ kết nối đến chuyến xe bus này. Mỗi điểm mà ứng dụng kết nối đến sẽ là 1 service name (như là các điểm xe bus). Tại các điểm kết nối này các ứng dụng
+sẽ có thể gửi các message (người) từ ứng dụng này đến ứng dụng khác.
+
+
+* Message: nội dung tin nhắn, thứ sẽ đượcc chuyển. Trong các ví dụ thì message chính là signal.
+
+* Service và Service name: Service chính là ứng dụng kết nối vào chuyến xe bus. Service name chính là tên của service đó, ứng dụng đó trên tuyến bus này )
+Service name chính là tên của điểm bus, đại diện cho điểm connection của ứng dụng với tuyến bus.
+
+(Khi giao tiếp thông qua 1 bus, các ứng dụng sẽ được gán, kiếm 1 cái được gọi là service name: nó là cách mà ứng dụng chọn để được biết đến bởi các ứng dụng khác trên cùng 1 bus.  KHái niệm tương tự là IP address và
+các hostname (tên miền): 1 máy tính (máy chủ) có 1 IP address và có nhiều hostname gắn với nó, tùy theo dịch vụ nó cung cấp mà nó sẽ có hostname tương ứng.)
+
+* Object: object sẽ được publish lên Bus từ Application. Trong ví dụ Chat của techbase thì object Chat sẽ được publish. Object sẽ được xác định bằng Object path duy nhất.
+
+* Interface: để giao tiếp với object, giống như là 1 instance của object.
+
+* Adaptor: sẽ wrap 1 object của application kết nối vào bus. Adaptor sẽ xử lý bất kỳ DBus request đến nào cho object này. Khi 1 method của object được gọi - invoked, nó sẽ gọi slot phù hợp. Khi object phát signals, thì Adaptor sẽ 
+chuyển nó thông qua DBus.
+Adaptor phụ trách giao tiếp giữa object và Bus.
+
+Trong cả 2 ví dụ chat thì đều chỉ có duy nhất 1 object được xác định bằng 1 object path duy nhất, object này được giao tiếp với application bằng nhiều interface khác nhau. Mỗi khi có message - signal được xác định = tên interface 
+giao tiếp với object này và tên message thì mọi slot kết nối vs signal đó sẽ đều được gọi. (Tức là signal này được phát ra từ các object - chính là interface (vì interface đại diện cho object để giao tiếp vs bên ngoài) và tên signal)
+
+interface chính là đại diện cho object - bên gửi, mỗi 1 interface sẽ phụ trách giao tiếp, đại diện cho object với 1 application.
+
+=======================================
+- A constructor must exist in order to create an object. The constructor could be defined implicitly by the compiler under some conditions if you do not provide any, but eventually the constructor must be there if you want an object 
+to be instantiated. In fact, the lifetime of an object is defined to begin when the constructor routine returns.
+
+From Paragraph 3.8/1 of the C++11 Standard:
+
+    [...] The lifetime of an object of type T begins when:
+
+    — storage with the proper alignment and size for type T is obtained, and
+
+    — if the object has non-trivial initialization, its initialization is complete.
+
+
+- Create object in C++:
+
+* When you instantiate object with automatic storage duration, like this (where X is some class):
+
+X x;
+
+You are creating an object which will be automatically destroyed when it goes out of scope. 
+
+* On the other hand, when you do:
+
+X* x = new X();
+
+You are creating an object X dynamically and you are binding its address to a pointer. This way, the object you created will not be destroyed when your x pointer goes out of scope.
+Tức là tạo 1 object X, cấp phát bộ nhớ động cho nó thông qua new operator. rồi sau đó tạo 1 con trỏ x và bind con trỏ này đến address của object X đã được cấp phát động đó.
+
+================================
+uint8_t *buffer = NULL;
+buffer = (uint8_t*) alloca(buffLen);
+
+uint32_t *ptr = (uint32_t*)buffer; // convert a variable p (of any type) to a pointer to uint32_t type. 
+
+(uint32_t*)buffer; => convert a variable p (of any type) to a pointer to uint32_t type: ép kiểu con trỏ buffer về kiểu uint32_t
+sau đó:
+uint32_t *ptr = buffer => khai báo 1 pointer và gán = pointer đã tạo ở trên, tức là pointer ptr trỏ đến cùng địa chỉ với pointer buffer.
+
+kiểu như gán con trỏ phải gán cùng kiểu.
+
+
+http://jeelabs.org/book/1506d/
+
+===============================
+
+Creating object in Java and C++:
+
+Khi khai báo: "type name;" điều này có nghĩa là ta sẽ sử dụng "name" để tham chiếu tới data có type là "type". "name" chưa được khởi tạo cũng như gán gì hết.
+"type" có thể là 1 object có type là "type", cũng có thể là subclass của "type", vì subclass của "type" cũng là "type". Lúc nào gán object cụ thể cho "name" thì ta mới biết chính xác type là "type" hay là subclass của "type".
+Đây là quan hệ is - a của inheritance trong OOP.
+
+Để khai báo và khởi tạo object cụ thể, thì ta dùng "new".
+
+Trên đây là kiểu reference trong Java, tương tự trong C++ ta cũng có pointer.
+Khi khai báo: type* name, tức là ta cũng chỉ khai báo 1 con trỏ name sẽ trỏ đến 1 data kiểu type. Khi đó con trỏ name có thể trỏ đến 1 object "type" hoặc là 1 object có type là subclass của "type", vì subclass của type cũng chính
+là type, và khi đó mới biết chính xác type của "name" là gì.
+
+Đây cũng được gọi là downcasting rất phổ biến trong OOP. Con trỏ, tham chiếu của base class có thể trỏ, tham chiếu đến object của derived class.
+
+==============================
+
+HANH HAN NGUYEN[Engineer II] says (PM 4:20) :  
+struct mà cũng ép kiểu về (uint8_t*) được à anh?
+sao ko để void*
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:22) :  
+struct thuc ra cung la 1 cai buffer
+lenh memcpy no yeu cau dau vao la 1 buffer kieu byte
+nen minh ep ve kieu char* em a 
+cai length la no cung tinh theo don vi char
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:23) :  
+ep ve kieu void * cung duoc
+memcpy no cung se copy tung byte thoi
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:24) :  
+a muon de uint8_t cho no tuong minh
+ah quen
+ko phai memcpy no copy tung byte mot
+ma phai noi la no tinh tren don vi byte
+ok?
+ HANH HAN NGUYEN[Engineer II] says (PM 4:25) :  
+thế  là uint8_t là kiểu nhỏ nhất, nên kiểu dữ liệu gì cũng ép về được?
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:25) :  
+dung roi em
+gan nhu the thoi
+vi du kieu con tro thi phai 4 byte
+ep ve 1 byte la se mat du lieu
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:27) :  
+ah
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:28) :  
+em da hoc ve con tro trong C chua
+ HANH HAN NGUYEN[Engineer II] says (PM 4:28) :  
+e có 
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:28) :  
+ok
+vi du a co con tro uint8_t *pointer;
+thi pointer se la may byte?
+ HANH HAN NGUYEN[Engineer II] says (PM 4:29) :  
+pointer sẽ trỏ đến 1 data có kiểu uint8_t
+còn nó mấy byte thì e ko chắc
+đúng ko a?
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:29) :  
+dung
+pointer luon la 4 bytes nhe
+va gia tri cua no tro den 1 data co kieu 1 byte
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:30) :  
+vi du pointer tro den mang 1,2,3,4,5...
+*pointer se = 1
+khi point++
+thi *pointer se tro den 2
+++ nua thi tro den 3
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:31) :  
+Neu a tao 1 kieu pointer khac
+uint16_t * pointer;
+cung tro den mang 1,2,3,4,5...(moi so 1 byte va lien tiep)
+thi theo em
+pointer++
+thi *pointer se tro den dau?
+ HANH HAN NGUYEN[Engineer II] says (PM 4:33) :  
+pointer sẽ cộng thêm 2 bytes nữa
+đến 3 ạ?
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:33) :  
+chuan
+do' la su khac nhau khi em thay doi kieu con tro
+ HANH HAN NGUYEN[Engineer II] says (PM 4:33) :  
+(Y)
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:33) :  
+LGPhoneDialAnObject_t * phoneDialAnObject_t;
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:34) :  
+vi du con tro tro den structure cung the
+phoneDialAnObject_t thi luon luon la 4 bytes
+*phoneDialAnObject_t tro den dau 1 khoi du lieu kieu structure
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:35) :  
+khi em phoneDialAnObject_t++
+thi sau do *phoneDialAnObject_t se tro den dau khoi du lieu structure tiep theo nhe
+do la trong tuong hop em co nhieu structure xep lien tiep trong bo nho
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:36) :  
+con neu em chi co 1 structure thi no se chi den du lieu vo nghia
+neu a ep phoneDialAnObject_ ve kieu unit8_t*
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:37) :  
+LGPhoneDialAnObject_t phoneDialAnObject_t;
+
+ HANH HAN NGUYEN[Engineer II] says (PM 4:37) :  
+nó sẽ trỏ đến byte đầu tiên của structer ạ?
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:38) :  
+uint8_t *pointer = (uint8_t *)&phoneDialAnObject_t;
+
+dung roi e nhe
+tuc la gio a se coi khoi du lieu structure do la 1 mang cac byte thoi
+ HANH HAN NGUYEN[Engineer II] says (PM 4:38) :  
+:)
+ THANH TRUNG NGUYEN[Senior II] says (PM 4:39) :  
+em clear ve cau hoi cua em sao lai ep ve uint8_t* chua
+:)
+ HANH HAN NGUYEN[Engineer II] says (PM 4:39) :  
+got it
+:v
+
+========================================
+
+std::vector<float> params = getEventParams(eventStr);
+sendCommand(IDM_AMAIN_MCONN_BLUETOOTHSETTINGS_REQ_GETDEVICEINFO, &params[0], sizeof(uint16_t));
+ 
+=> sai vì params[0] là kiểu float - 4 bytes, mà ta chỉ lấy có 2 bytes đầu - 16 bit , mà data được ghi ở byte 3, 4 do đó sẽ ko đúng.
+
+Nếu truyền cả 32 bit thì phía nhận sẽ chưa chắc đã chấp nhận. 
+
+Do đó ta phải thực hiện phép gán như sau:
+
+uint16_t devicehandle = params[0];
+sendCommand(IDM_AMAIN_MCONN_BLUETOOTHSETTINGS_REQ_GETDEVICEINFO, &devicehandle, sizeof(uint16_t));
+
+Khi đó devicehandle sẽ đảm bảo đủ data của params[0] và truyền vào sendCommand đúng.
+
+Đối với trường hợp code cũ thì ta truyền tham số vào hàm, cũng tức là thực hiện phép gán vào parameter uint16_t của hàm, nên cũng tương đương với việc ta tạo biến devicehandle như trên.
+
+======================================
+http://www.learncpp.com/cpp-tutorial/114-constructors-and-initialization-of-derived-classes/
+
+class Base
+{
+private: // our member is now private
+    int m_id;
+ 
+public:
+    Base(int id=0) : m_id(id)
+    {
+    }
+ 
+    int getId() const { return m_id; }
+};
+
+class Derived: public Base
+{
+private: // our member is now private
+    double m_cost;
+ 
+public:
+    Derived(double cost=0.0, int id=0): Base(id), // Call Base(int) constructor with value id! 
+                                        m_cost(cost)
+    {
+    }
+ 
+    double getCost() const { return m_cost; }
+};
+
+int main()
+{
+    Derived derived(1.3, 5); // use Derived(double, int) constructor
+    std::cout << "Id: " << derived.getId() << '\n';
+    std::cout << "Cost: " << derived.getCost() << '\n';
+ 
+    return 0;
+}
+
+==> here’s what happens:
+
+    1. Memory for derived is allocated.
+    2. The Derived(double, int) constructor is called, where cost = 1.3, and id = 5
+    3. The compiler looks to see if we’ve asked for a particular Base class constructor. We have! So it calls Base(int) with id = 5.
+    4. The base class constructor initialization list sets m_id to 5
+    5. The base class constructor body executes, which does nothing
+    6. The base class constructor returns
+    7. The derived class constructor initialization list sets m_cost to 1.3
+    8. The derived class constructor body executes, which does nothing
+    9. The derived class constructor returns 
+    
+Khi 1 derived class constructor được gọi, luôn luôn gọi base class constructor, nếu base ko có constructor nào thì default constructor sẽ được gọi. Sau khi base constructor thực thi xong thì sẽ return control ra cho derived 
+constructor executes tiếp.
+
+
+=======================================
+
+
+PendingIntent: là 1 token bao lấy 1 cái intent và 1 hành động đích để thực thi intent đó. PendingIntent được tao ra bởi các API: getActivity, getService, getBroadcast tức là gọi 1 intent, 1 service, gửi 1 broadcast ở tương lai.
+PendingIntent sẽ được đưa cho 1 ứng dụng khác thực thi, gọi ở 1 thời gian ở tương lai. Khi pendingIntent được thực thi thì sẽ sử dụng các permisision của app mình.
+
+Tức là mình tạo 1 pendingIntent trong app của mình, giao cho nó 1 intent, 1 nhiệm vụ ở tương lai(gọi Activity, gọi Service, gửi broadcast...) và đưa cho 1 app thứ 3. Đến thời gian mà mình hẹn trước, thì app thứ 3 đó sẽ thay mặt 
+cho app của mình để thực thi intent của pendingIntent đó.
+
+1 lỗi chung mà mọi người mắc phải khi tạo PendingIntent đó là tạo ra nhiều pendingIntent và giao cho nó 1 intent mà chỉ khác nhau ở extra content, với mong muốn sẽ nhận được nhiều pendingIntent mỗi lần, nhưng điều này sẽ ko xảy ra
+bởi vì intent được sử dụng cho pendingIntent sẽ được xác định thông qua Intent.filterEqual, mà hàm này thì sẽ ko phân biệt intent thông qua extra content.
+Thế nên để làm được điều này, 1 là phải định nghĩa các intent phân biệt được theo tiêu chí của Intent.filterEqual, HOẶC là các request code khác nhau khi sử dụng các hàm getActivity, getService, getBroadcast...
+
+Nếu bạn chỉ đơn giản muốn 1 PendingIntent active tại 1 thời điểm với nhiều intent khác nhau, thì có thể sử dụng Flag  FLAG_CANCEL_CURRENT và FLAG_UPDATE_CURRENT để cancel hoặc modify pendingIntent hiện tại.
+
+======================================
+1. bắt đầu tính bit 0 từ bit ngoài cùng bên phải
+đối với signed data, bit thứ 7 - bit ngoài cùng bên trái sẽ là bit dấu: 1 tức là negative, 0 tức là positive.
+
+2. powser of '~': ~a tức là đảo ngược tất cả các bit nhị phân của a: 0->1 và 1->0
+char a -> res = -a thì ta thực hiện 2 bước: 1 là đảo ngược tất cả các bit nhị phân của a (flip), sau đó cộng thêm 1 sẽ ra được giá trị của -a
+
+3. Power of Shift: 
+>>n : dịch sang phải n bit, tức là giá trị có được = giá trị ban đầu / 2^n
+<<n : dịch sang trái n bit, tức là giá trị có được = giá trị ban đầu * 2^n
+Đối với unsigned data: bit thêm vào luôn là 0
+
+Đối với singed data: >> bit dấu được bảo toàn (thực tế phép chia, nhân đều như thế đối với hệ thập phân) => nếu là negative thì bit thêm vào là 1, positive thì bit thêm vào là 0.
+<< giống với unsigned data, bit thêm vào luôn là 0.
+
+4. Right shift with typecast: ép kiểu data về kiểu gì thì bit thêm vào kiểu đó. Ví dụ a = -8,  (unsigned char)a >> 2 => thêm vào 2 bit 0
+                                                                                                còn nếu (signed char)a >> 2, thì thêm vào 2 bit 1.
+                                                                                                
+5. Capability of '|': x | 0 = x; -> maintaince property
+                      x | 1 = 1; -> setting property         
+
+6. Capabiltiy of '^': x ^ 0 = x -> maintaince property
+                      x ^ 1 = flip x = x' -> toggle property
+7. Capability of '&': x & 0 = 0 -> resetting property
+                      x & 1 = x -> maintaince property
+                      
+================================================
+
+Generator in Python:
+
+Generator đơn giản là 1 hàm mà sẽ return ra 1 hoặc nhiều object khi gọi 'next', cho đến khi đến limit - tất cả các ojbect được return thì raise lên StopIteration exception.
+1 function bất kỳ nếu sử dụng 'yield' thì sẽ là 1 generator. 
+1 cách nữa để tạo ra 1 generator là sử dụng generator expression, dùng () để chỉ ra nó là 1 generator.
+
+Trong 1 function generator được gọi, được thực thi (có thể thông qua next hoặc for loop - for loop sẽ tự động gọi next và xử lý stopIteration), thì các câu lệnh của function generator sẽ được thực thi từ đầu đến 
+khi yield xuất hiện và trả lại giá trị trong lệnh yield. Sau đó, ở lần tiếp theo function generator được gọi, nó sẽ thực thi tiếp từ chính vị trí câu lệnh yield của lần trước này, dựa trên kết quả của lần yield ngay trước này. 
+Generator ko thực thi tất cả trong list của nó, mà chỉ thực thi khi mà nó được gọi đến.
+
+=================================================
+(long*, int* có thể hiểu là * - con trỏ trỏ đến kiểu long, int)
+
+1. Operation with pointer:     pointer - read[base @, num of bytes]
+                                    - write[base @, num of bytes]
+                                    - navigate[base @, num of bytes]
+                                => base @ chính là giá trị gán cho pointer, địa chỉ mà pointer trỏ đến - là byte thấp nhất của data đối với  little endian system.
+                                => num of bytes chính là type của pointer trỏ đến - capability - Databyte.
+                                
+Data type of pointer # Datatype = capability
+Data type of pointer - 1 = Datatype
+                                
+long a = 0xABCD1234; byte bé nhất có địa chỉ 100 => base address @ là 100: @ = &a = 100.
+long *p, p = &a; => p trỏ đến base address @ của a, tức là byte có address 100 => 4 byte của p sẽ chứa giá trị 100.
+                                
+*p = Base @ + no of bytes: vd: int *p; p trỏ đến address 104, khi đó *p = 0x08070605 với 08, 07, 06, 05 lần lượt là giá trị ở các ô nhớ có địa chỉ tương ứng là 107, 106, 105, 104 ( chú ý cách in giá trị này là đối với 
+little endian system - bit thấp sang bit cao là từ phải sang trái)
+
+giả sử *p = 0x0201
+       *p = *p + 2 => *p = 0x0203, lúc đó bit thấp sẽ thay giá trị từ 01 -> 03
+       
+2. long *p;
+   long a = 0xABCD1234;
+   p = &a
+   
+   gán được như thế là vì a kiểu long => con trỏ trỏ đến a phải là long* để đảm bảo tính Balance datatypes.(do đó ta suy ra type p là long * => type của &a cũng nên là long*)
+                                         p cũng là long*.
+   type của p là long* => &p sẽ là long**
+   
+3. int* p = &a (@ = 104)
+   *p = 0x08070605;
+   short int* q = &b (@ = 100)
+ 
+   làm thế nào để *q = 0x08070605? - đầu tiên phải cho q trỏ về base address của p -> q + 2. Lúc này *(q + 2) = 0x0605, vì q lúc này vẫn là short int. Muốn q trỏ đến 4 byte thì phải ép kiểu q về kiểu int hoặc long 
+   => *((int*)(q+2) = 0x08070605
+   
+   Một cách khác là ép kiểu q về int* trước: *((int*)q + 1)
+   
+   => KL: pointer luôn có 2 yếu tố cơ bản, trọng yếu đó là: BASE ADDRESS + CAPABILITY. Mọi đặc tính, operator của con trỏ đều xoay quanh 2 yếu tố này.
+   
+4. Pointer indexing:
+p[3] = *(p + 3)
+(p+1)[2] = *((p+1) + 2) = *(p + 3)
+
+=> p[i] = *(p + i) = i[p]
+
+*((int*)p + i) = (int*)p[i] (ép kiểu xong mới thực hiện việc navigation con trỏ): ở đây (int*)p = exp1, i = exp2 nên cứ thế mà áp dụng công thức trên.
+
+5. Pointer declaration:
+
+long a = 0x123456;
+long*p = &a;
+đối với phép gán, thì type 2 bên phải = nhau. type của bên trái là long*, do đó type của bên phải cũng phải là long*. &a là address của a, khi nói đến address thì phải là pointer trỏ đến address đó, và pointer đó sẽ có kiểu 
+là long*, do đó nó nên được ép kiểu về long*: (long*)&a.
+
+&a là 1 con trỏ.
+Trước ta hiểu gán địa chỉ cho con trỏ, nhưng bản chất ko phải như thế, mà thực ra là gán con trỏ cho con trỏ, con trỏ được gán sẽ có giá trị của con trỏ bị gán.
+
+=> long*p = (long*)&a;
+
+5. Alignment requirement:
+
+type *p => address gán cho con trỏ phải chia hết cho size của con trỏ: @p % sizeof(type) == 0 thì mới đảm bảo là giá trị con trỏ trỏ đến là đúng.
+
+ví dụ: int *p => address của p phải thỏa mãn: @p % 4 == 0. 
+Do các data type của C có số byte là 1, 2, 4, 8, địa chỉ gán được cho type 8 byte sẽ gán được cho type 4, 2, 1 byte do đó gán con trỏ kiểu lớn về bé thì được, nhưng gán từ bé thành lớn sẽ ko đảm bảo là đúng giá trị.
+còn ép kiểu con trỏ lớn thành bé, bé thành lớn đều được hết.
+
+6. Pointer Indirection:
+
+char **p; //tức là p là 1 con trỏ, trỏ đến 1 con trỏ char*, con trỏ char* này trỏ đến 1 địa chỉ char
+p = 108;
+
+type của p là char** -> Datatype = capability = 4 bytes: p là con trỏ trỏ đến 1 con trỏ khác có address = *p
+type của *p là char* -> Datatype = capability = 1 byte: *p là địa chỉ của 1 con trỏ trỏ đến 1 byte char
+type của **p là char: p là 1 con trỏ trỏ đến con trỏ có @ = *p, con trỏ này là 1 con trỏ trỏ đến ô nhớ có address = **p: **p chỉ là 1 byte char. Tất cả thao tác, operator đều phải thực thi qua con trỏ p, vì ta chỉ khai báo
+sử dụng 1 con trỏ 2 lớp p mà thôi. Chứ ko có khái niệm con trỏ *p ở đây, mà chỉ có khái niệm con trỏ trỏ đến ô nhớ có address = *p. *p chỉ là 1 giá trị địa chỉ. Để có thể tương tác với ô nhớ này ta có thể gán địa chỉ này cho
+con trỏ khác. Ví dụ:
+char* q;
+q = *p;
+
+khi đó: *p = *(char**) mà *p luôn có 2 giá trị để xác định: 1 là @, 2 là số byte của data type. Ở đây @ là 108, còn số byte của data type với data type là 1 con trỏ char* = 4 bytes => lấy giá trị của 4 byte tiếp theo bắt đầu
+từ byte 108
+        **p = *(*p) khi đó: *p có giá trị là 0x0A090807 => @ = 0x0A090807. Datatype ở đây là char vì *(char*) = char (nguyên tắc trừ số * tương ứng) => 1 byte => lấy giá trị của 1 byte có địa chỉ 0x0A090807 
+        
+7. function pointer: 
+Có thể dùng 1 con trỏ trỏ đến 1 function, lúc đó con trỏ có giá trị = địa chỉ của byte đầu tiên của function.
+Không có khái niệm capability của con trỏ hàm, cũng như read, write, move con trỏ hàm. Duy nhất có thể làm con trỏ hàm là execute.
+
+8. Pointer to a function declarations: 
+
+pfn1 is a pointer to a function whose params is... and return int value => int (*pfn1)(char*); : Theo quy tắc xoắn ốc từ pfn1 -> * -> params: char* -> return value: int.
+Tương tự đối với con trỏ trỏ đến 1 array kiểu int 
+=> 2 cấu trúc: (*)() và (*)[]
+
+fucntionName = &functionName = base address of function
+
+9. Execute function pointer:
+
+khi có 1 function: static int printString(const char* name); //printString = &printString = 100 (@ của function)
+ta khai báo 1 pfn: static int (*pfn)(const char* name);
+và trỏ pfn đến   : pfn = printString;
+Khi đó execute   : pfn("Advance C") ~ (*pfn)("Advance C")
+
+10. Passing function pointer to a Function:
+
+có 1 hàm: int example1(char* arg1, int arg2);
+
+và 1 hàm: int process(int a1, int a2, int(*pfn)(char*, int)) 
+{
+    ...
+    pfn(p, len);
+    ...
+}
+
+Khi đó ta có thể pass hàm 1 vào hàm 2: process(a1, a2, example1);
+
+Để tường minh hơn, ta định nghĩa typedef như sau: typedef int (FDTR) (char*, int)
+
+Cấu trúc typedef: typedef unsigned int UINT32 tức là UINT32 = unsigned int. Thì ở trên ta đã gán cho FDTR = 1 hàm có tham số (char*, int) và trả lại int.
+Khi đó hàm process được viết lại tường minh hơn: int process(int a1, int a2, FDTR* pfn1);
+
+10. Void pointer:
+
+void pointer chỉ chứa base address @ mà ko có thông tin gì về capability của nó, do đó ko thể read, write hay movement nó (+1, -1 có thể +, - @ lên 1 byte nhưng ko nên dùng)
+Nếu muốn đọc, ghi nó thì phải ép kiểu về kiểu con trỏ mong muốn rồi mới thực hiện các operator đối với con trỏ.
+
+chỉ sử dụng void pointer trong các trường hợp:
+- dùng như 1 container: nó chỉ dùng để chứa 1 base address
+- dùng khi nếu ko biết 1 function return ra 1 address: ví dụ như hàm malloc trong C. malloc chỉ return ra 1 con trỏ void, tức là 1 address, chứ ko biết gì về capability của pointer. Để dùng malloc, ta phải dùng như sau:
+    char *p;
+    p = (char*)malloc(100)
+    Khi đó malloc sẽ cấp phát bộ nhớ cho p, return ra @ cho p, cấp phát 100 bytes = 100 con trỏ char, và biết được kiểu của con trỏ luôn thông qua ép kiểu.
+    int *p;
+    p = (int*)malloc(100)
+    cấp phát 4*100 = 400 bytes = 100 con trỏ int.
+- dùng để hide struct thông qua 1 address: ví dụ như 1 hàm return ra 1 con trỏ void. Khi đó ta sẽ ko biết được data type của data trả về là gì, mà chỉ biết @ của nó mà thôi. Để dùng hàm này, thì ta phải biết được kiểu trả về
+là gì, rồi ép kiểu con trỏ void này thành kiểu đó, và dùng bình thường.
+
+=======================================
+
+Array - 1D:
+
+arr[2] - giá trị của element 2 of arr
+&arr[2] - @ của element 2 of arr.
+
+int *p, *q;
+p = 112;
+q = 100;
+element offset:
+p - q = 3; // p - q = (int*)p - (int*)q , lúc này là trừ 2 con trỏ, 2 con trỏ này trỏ đến 2 ô nhớ int cách nhau 3 giá trị = tức là khoảng cách/offset giữa 2 element này = 3.
+byte offset:
+(int)p - (int)q = 12; //trừ 2 giá trị của p và q
+
+tương tự đối với con trỏ như trên, ta có:
+
+&arr[3] - &arr[0] = 3: element offset
+(int)(&arr[3]) - (int)(&arr[0]) = 12: byte offset.
+
+===================================
+
+1 cách declartion array:
+char cArr[ROW][COL] = { 
+    [0] = {[0] = 10, [3] = 20, [5] = 30,},
+    [2] = {[0] = 40, [2] = 50,},
+}
+
+Nếu ko khai báo row, hoặc col của arr khi khai báo thì số hàng/cột sẽ được xác định theo số lớn nhất của hàng, cột mà mình khởi tạo, tính từ 0.
+
+=================================
+
+char str1[] = "Advanced C"; 
+char* q = str1;
+
+++str1: ko được phép. Trong C, ko có cách nào để thay đổi giá trị @ của array, vì khi đó sẽ ko index, đánh số được các element còn lại của array.
+++(++*q): Được phép. *q là A, do đó ++ sẽ thành B, ++ nữa sẽ thành C.
+
+================================
+
+Passing arrays to function:
+
+char aubyArr1[10] = {1, 2, };
+char aubyArr2[10] = {...};
+char aubyArr3[5][16] = {{0}};
+
+testPassArrayToFunc(aubyArr1, aubyArr2, aubyArr2, aubyArr3, aubyArr3);
+
+với testPassArrayToFunc:
+
+static int testPassArrayToFunc(char aubyArr11[], char aubyArr12[], char aubyArr2[10], char auby2DA[][16], char auby2DB[5][16]){
+.....
+}
+
+Lúc này char aubyArr11[], char aubyArr12[], char aubyArr2[10], char auby2DA[][16], char auby2DB[5][16] là các con trỏ trỏ đến tham số truyền vào: ở đây 2 cái đầu trỏ đến aubyArr1, cái giữ trỏ đến aubyArr2, 2 cái cuối trỏ 
+đến aubyArr3.
+Nếu print ra các size của các biến này sẽ là 4 bytes - số byte của 1 con trỏ, giá trị là @ của các mảng này.
+
+Ta ko được phép thay đổi @ của array, nhưng trong hàm testPassArrayToFunc thì được, vì lúc này các aubyArr11, ... là các con trỏ, chứ ko phải là 1 mảng cố định.
+
+===============================
+
+Variable Length Arrays: 
+Ta có thể khai báo length của 1 array mà length này ko phải là 1 constant, ví dụ:
+
+int copyFnc(int len, int data[len]);
+
+hoặc void copyFnc(int len){
+    int data[len];
+}
+===============================
+realloc and related info:
+
+unsigned char *p, *pr;
+pr = realloc(p, size);
+
+=> re-allocated buffer có @ là p sang 1 size mới, data cũ sẽ được maintain từ điểm start đến min(size cũ, size mới).
+Nếu size mới > size cũ của p thì để đảm bảo có 1 buffer các ô nhớ liên tiếp, pr sẽ là 1 con trỏ mới, p sẽ tự động bị free internally.
+Nếu size mới < size cũ, pr = p.
+
+Để check realloc có thành công hay không, ta sẽ check pr == null hay không, nếu fail, data cũ sẽ không bị thay đổi gì.
+
+if(pr){
+
+} else {
+
+}
+
+=============================
+Polymorphism trong C++:
+
+virtual function: là function có virtual ở trước, virtual function trong base class vẫn implement như thường, nhưng khác biệt ở chỗ virtual chính là chìa khóa của Polymorphism. Nó cho phép class con có thể implement Lại virtual
+function theo cách của nó. Ví dụ có:
+Base* pBase = &Derived;
+pBase->foo()
+
+thì khi đó nếu foo ko có virtual thì nó sẽ chỉ gọi foo của base mà ko gọi của derived bởi vì pBase là 1 con trỏ trỏ đến Base, nên compiler sẽ chỉ nhìn vào base mà thôi - đó là do compiler. Còn nếu có virtual thì sẽ báo cho compiler
+biết là phải tìm đúng implement của derived class - nếu derived có override hàm virtual đó.
+
+pure function: là virtual function, có = 0 ở cuối, và trong class con phải implement pure function của class cha. Còn pure function của cha ko phải implement, tùy thuộc cho derived class implement theo ý của nó.
+
+Abstract class là 1 class có chưa 1 hoặc nhiều pure function, và abstract class ko thể được khởi tạo.
+Nếu 1 class kế thừa từ abstract class thì bắt buộc phải implement pure function, nếu không thì cũng sẽ chỉ là abstract class và ko thể được khởi tạo => nhắc ta phải luôn implement pure function của class cha nếu muốn khởi tạo.
+
+Interface trong C++ là 1 abstract class không có variable, chỉ chứa pure function. Interface ko thể được khởi tạo, chỉ dùng để kế thừa.
+
+==============================
+
+Nested class: 2 loại: static nested class và non-static nested class - inner class. Lưu ý khai báo trong outer class nhưng ko phải là tham số của outer class, trừ khi khai báo 1 tham số kiểu nested class. Chỉ là định nghĩa trong
+outer class, và liên kết với outer class.
+
+1. Static nested class: là static nên nó tồn tại độc lập với outer class. Nên giống với static methods, nó ko thể refer, gọi trực tiếp đến tham số, hàm của outer class trực tiếp - những cái chưa xác định mà còn phụ thuộc vào từng
+instance của outer class. Thay vào đó nó phải refer thông qua 1 object, 1 instance của outer class, khi đó value đã được xác định rồi, hoặc tham số, hàm của outer class đó phải là static.
+
+Các nested interface mặc định là static rồi.
+Khởi tạo nested rất quen thuộc như sau: OuterClass.StaticNestedClass nestedObject = new OuterClass.StaticNestedClass();
+
+2. Inner class: ko static, nó có thể refer, gọi trực tiếp đến tham số, hàm của outer class. Và do ko phải là static, do nó liên kết với từng instance của outer class, nên trong nó ko thể chứa static member.
+Khởi tạo như sau: OuterClass.InnerClass innerObject = outerObject.new InnerClass();
+
+==============================
+
+===============================
+
+Algorithms:
+
+Permutation of String - DFS
+
+#include <iostream>
+using namespace std;
+void permutation(char arr[], char copy[], int visited[], int current, int count, int n)
+{
+    if(count == n)
+    {
+        copy[n - 1] = arr[current];
+        for(int i = 0; i < n; i++)
+            cout << copy[i];
+        cout << ' ';
+        return;
+    }
+    copy[count - 1] = arr[current];
+    visited[current] = 1;
+    for(int i = 0; i < n ; i++)
+    {
+        
+        if(visited[i] == 0) 
+        {
+            count++;
+            visited[i] = 1;
+            permutation(arr, copy, visited, i, count, n);
+            count--;
+            visited[i] = 0;
+        }
+    }
+}
+
+int main() {
+    int n = 4;
+	char arr[n] = {'A', 'B', 'S', 'G'};
+	char copy[n] = {'0'};
+	int visited[n] = {0};
+	for(int i = 0; i < n; i++)
+	{
+	    permutation(arr, copy, visited, i, 1, n);
+	    visited[i] = 0;
+	}
+	return 0;
+}
+===============================================
+
+Ways To Tile A Floor - Fibonnaci - DP
+
+#include <iostream>
+using namespace std;
+
+int waysToTile(int W)
+{
+    int ways[W] = {0};
+    ways[0] = ways[1] = 1;
+    
+    for(int i = 2; i <= W; i++) 
+    {
+        ways[i] = ways[i-1] + ways[i-2];
+    }
+    return ways[W];
+}
+
+int main() {
+
+	cout << waysToTile(5) << endl;
+	return 0;
+}
+
+===============================================
+
+Smallest number - Greedy
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int d = 2;
+    int s = 9;
+    
+    int arr[d] = {0};
+    
+    if(9*d < s) 
+    {
+        cout << -1;
+        return 0;
+    }
+    
+	s = s - 1;
+	
+	for(int i = d - 1; i > 0; i--)
+	{
+	    if(s >= 9)
+	    {
+	        arr[i] = 9;
+	        s = s - 9;
+	       
+	    }
+	    else 
+	    {
+	        arr[i] = s;
+	        s = 0;
+	    }
+	}
+	arr[0] = s + 1;
+	for(int i = 0; i < d; i++)
+	{
+	    cout << arr[i];
+	}
+	return 0;
+}
+
+==============================================
+
+Help the Old Man!!! - divide and conquer - Tower of Hanoi - Recursion
+
+#include <iostream>
+using namespace std;
+int noOfStep = 0;
+void move(int n, int fromBox, int toBox, int midleBox, int step)
+{
+    if(n == 1)
+    {
+        noOfStep++;
+        if(noOfStep == step)
+        {
+            cout << fromBox << " " << toBox << endl;
+        }   
+        return;
+    }
+    
+    move(n - 1, fromBox, midleBox, toBox, step);
+    //cout << fromBox << " " << midleBox << endl;
+    noOfStep++;
+    
+    if(noOfStep == step)
+    {
+        cout << fromBox << " " << toBox << endl;
+    }
+    move(n - 1, midleBox, toBox, fromBox, step);
+    
+}
+
+int main() {
+	//code
+	move(4, 1, 3, 2, 5);
+	return 0;
+}
+
+==============================================
+Number of paths - recursion - dp
+
+#include <iostream>
+using namespace std;
+
+int numberOfPaths(int m, int n)
+{
+    int count[m][n];
+ 
+    for (int i = 0; i < m; i++)
+        count[i][0] = 1;
+ 
+    for (int j = 0; j < n; j++)
+        count[0][j] = 1;
+
+    for (int i = 1; i < m; i++)
+    {
+        for (int j = 1; j < n; j++)
+        
+            count[i][j] = count[i-1][j] + count[i][j-1]; //+ count[i-1][j-1];
+ 
+    }
+    return count[m-1][n-1];
+}
+
+int main()
+{
+    cout << numberOfPaths(3, 3);
+    return 0;
+}
+
+=============================================
+Flood fill Algorithm - Recursion
+
+#include <iostream>
+using namespace std;
+#define m 4
+#define n 3
+
+void recursion(int x, int y, int color, int nextColor, int arr[m][n], int xMove[], int yMove[])
+{
+    int nextX, nextY;
+    
+    for(int i = 0; i < 4; i++)
+    {
+        nextX = x + xMove[i];
+        nextY = y + yMove[i];
+        
+        if(0 <= nextX < m && 0 <= nextY <n && arr[nextX][nextY] == color)
+        {
+            arr[nextX][nextY] = nextColor;
+            recursion(nextX, nextY, color, nextColor, arr, xMove, yMove);
+        }
+    }
+    
+}
+
+int main() {
+
+	int arr[m][n] = {{0, 1, 1}, {0, 1, 1}, {1, 1, 0}, {1, 2, 3}};
+	int x = 0, y = 1, k = 5;
+	int xMove[4] = {-1, 1, 0, 0};
+	int yMove[4] = {0, 0, -1, 1};
+	
+	recursion(x, y, arr[x][y], k, arr, xMove, yMove);
+	
+	for(int i = 0; i < m; i++) 
+    {
+        for(int j = 0; j < n; j++)
+        {
+            cout << arr[i][j] << ' ';
+        }
+        cout << endl;
+    }
+	return 0;
+}
+
+============================
+Gold Mine - dp:
+
+#include <iostream>
+
+using namespace std;
+
+
+int main(){
+
+	int table[3][3] = {{1, 3, 3}, {2, 1, 4}, {0, 6, 4}};
+	int gold[3][3] = {0};
+	int stepRow[3] = {0, 1, -1};
+
+
+	for(int i = 0; i < 3; i++){
+		gold[i][0] = table[i][0];
+	}
+
+	for(int col = 1; col < 3; col++){
+		for(int row = 0; row < 3; row++){
+			int max = 0;
+			for(int step = 0; step < 3; step++){
+
+				if(0 <= row - stepRow[step] < 3){
+					gold[row][col] = gold[row - stepRow[step]][col - 1] + table[row][col];
+
+					if(gold[row][col] > max){
+						max = gold[row][col];
+					}
+				}
+			}	
+			gold[row][col] = max;
+		}
+
+	}
+
+	int result = gold[0][2];
+	for(int i = 0; i < 3; i++){
+		if(gold[i][2] > result)
+			result = gold[i][2];
+	}
+
+	cout << result << endl;
+	return 1;
+}
+
+=====================================
+
+Knapsack - DP:
+
+#include <iostream>
+
+using namespace std;
+
+int main(){
+
+	int val[] = {60, 100, 120};
+	int wt[] = {10, 20, 30};
+	const int W = 50;
+	const int n = sizeof(val)/sizeof(val[0]);
+
+    /* Tương tự như bài gold mine ở trên, tưởng tượng ma trận cần phải xây dựng có n cột - n vật, W hàng - W khối lượng. Ta phải tìm sao cho giá trị của cột thứ n, hàng W lớn nhất - gold mine là chỉ cần giá trị cột n lớn nhất.
+       val[] là giá trị của các vật - tương ứng trong bài gold mine là giá trị ở các ô
+    */
+	int valueTable[W + 1][n + 1];
+    
+	for(int i = 0; i < W; i++){
+		valueTable[i][0] = 0;	
+	}
+
+	for(int i = 0; i < n; i++){
+		valueTable[0][i] = 0;
+	}
+
+    /* Ta sẽ xét lần lượt từng cột*/
+	for(int i = 1; i <= n; i++){
+        /* Xét lần lượt từng ô trong từng cột */
+		for(int w = 1; w <= W; w++){
+            /* Ở đây, giá trị có thể cộng thêm vào tại cột thứ i - vật thứ i trong i vật - chính là wt[i-1], do đó ta so sánh wt[i-1] với w.
+            Nếu khối lượng của vật i - tương ứng là (i - 1) trong mảng wt, bé hơn w, thì ta có thể thêm vào, thế nên phải so sánh giá trị của ô (i, w) nếu thêm vật i vào có lớn hơn giá trị nếu không thêm ko?              
+            */
+			if(wt[i - 1] <= w){
+				valueTable[w][i] = max(valueTable[w - wt[i - 1]][i - 1] + val[i], valueTable[w][i - 1]);
+			} else {
+				valueTable[w][i] = valueTable[w][i - 1];
+			}
+		}
+	}
+
+	cout << valueTable[W][n] << endl;
+	return 0;
+}
+================================
+
+comparable vs comparator trong Java:
+
+Comparable object có khả năng compare chính nó với object khác. Chính class này phải implement Comprable interface để compare các instant của nó.
+Comparable object implement comparable interface phải implement hàm compareTo.
+
+Comparator là 1 class tách biệt, nó là 1 external, phần thêm vào với element type là object sẽ được so sánh. Do đó ta có thể tạo ra nhiều class, mỗi class đều implement comparator, và các comparator tương ứng này sẽ chứa
+1 element type là 1 type của object sẽ được dùng để so sánh.
+Ví dụ có 1 object movie, có các type là year, rating. Thì ta tạo YearComparator implement Comparator<Movie> và trong YearComparator sẽ override hàm comparator so sánh year của 2 object Movie....
+
+=> Comparable object là so sánh chính object đó, Comparator là object dùng để so sánh 2 object
+
+===============================
+
+Khai báo: int* p = new int => ta chỉ khai báo 1 con trỏ p trỏ đến 1 ô nhớ 1 byte - kiểu int. Tức là chỉ được cấp phát bộ nhớ 1 byte để con trỏ này trỏ đến.
+Nếu muốn khai báo 1 mảng thì phải là int*p = new int[length]
+
+===============================
+strlen là 1 function, có 1 con trỏ travel từ bắt đầu string/char* đếm đến khi nào gặp ký tự null thì dừng lại => ko bao gồm ký tự null/kết thúc và chỉ dùng cho string/char*
+sizeof dùng để lấy size thực tế của bất cứ data type nào theo bytes. Do đó sizeof(string) sẽ bao gồm cả ký tự kết thúc/null của string đó => do đó sẽ chính xác hơn đối với so sánh string, cấp phát cho 1 string...
+
+Trong ví dụ này:
+
+	size_t length = sizeof("evG_Settings_System_WiFi_Networks(");
+    IPCMessageRcvUnitTest::getInstance()->lengthEvent = length;
+    IPCMessageRcvUnitTest::getInstance()->eventStr = new uint8_t[length];
+	
+thì nếu chỉ dùng strlen thay vì sizeof, thì nó chỉ cấp phát bộ nhớ = 34 bytes - 34 ô nhớ kiểu int cho con trỏ eventStr, do đó compiler sẽ chỉ cấp phát đúng 34 ô nhớ, và rất có thể tiếp theo là ký tự rác # null. Do đó khi tiến hành 
+so sánh cũng như lấy length của con trỏ eventStr này thì sẽ bao gồm cả 34 ô nhớ định gán + số ký tự rác # null đó => sai kết quả.
+
+=======================
+id: HANHNGUYEN
+GmId: ZZGB0Q
+GmIn: 984285003
+
+======================
+
+http://www.saramin.co.kr/zf_user/
+http://www.jobinkorea.co.kr/esl/
+http://kinsa.org/
+
+======================
+
+0451000407494
+vietcombank
+le quang hanh
+
+=====================
+
+Photoshop tips:
+1. Rounded corner rectangle:
+ - double click to make layer image
+ - Rectangular marquee tool và sau đó Image -> crop để crop lại khu vực cần lầy, hoặc có thể dùng Crop tool
+ - Chọn Rounded Rectangler tool, chọn radius cho rectangle này.
+ - Chọn paths ở bên tay phải thay cho Layer, chuột phải -> make selection
+ - Select -> Inverse
+ - Image -> Clear
+ - Select -> Deselect (Ctrl + D)
+ 
+2. Chọn area theo màu:
+ - Chọn Quick Selection Tool -> Click vào màu trong ảnh
+ - Chọn Magic Wand Tool cũng được (Có sự khác biệt nhỏ nhưng đơn giản thì như nhau)
+ - Image -> Fill -> Chọn màu mong muốn

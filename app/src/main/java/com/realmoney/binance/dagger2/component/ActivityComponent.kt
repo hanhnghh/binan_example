@@ -2,7 +2,7 @@ package com.realmoney.binance.dagger2.component
 
 import com.realmoney.binance.dagger2.PerActivity
 import com.realmoney.binance.dagger2.module.ActivityModule
-import com.realmoney.binance.ui.MainActivity
+import com.realmoney.binance.ui.activity.MainActivity
 import dagger.Subcomponent
 
 /**

@@ -1,4 +1,4 @@
-package com.realmoney.binance.ui
+package com.realmoney.binance.ui.activity
 
 import android.graphics.drawable.Animatable
 import android.os.Binder
